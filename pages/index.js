@@ -70,6 +70,9 @@ export default function Home() {
     setItems(initialItems);
     setFormValid(false);
     setPassed(false);
+    if (nameRef.current) {
+      nameRef.current.focus();
+    }
   }
 
   const submitForm = event => {
@@ -96,13 +99,29 @@ export default function Home() {
   return (
     <div className="w-full md:max-w-2xl mx-auto flex flex-wrap mt-0 py-3 px-6">
       <Head>
-        <title>Covidscreen</title>
+        <title>Covid Screen</title>
         <link rel="icon" href="/favicon.ico" />
+
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=UA-174216278-1"
+        />
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'UA-174216278-1');
+              `,
+          }}
+        />
       </Head>
 
       <main className="">
-        <h1 className="text-4xl font-bold mb-4">
-          Covidscreen.us
+        <h1 className="text-4xl font-bold mb-6 block">
+          <img src="/logo.png" className="inline" /> Covidscreen.us
         </h1>
        
         {!passed &&
@@ -126,7 +145,7 @@ export default function Home() {
             <input 
               type="submit" 
               value="Submit"
-              className="px-4 py-2 text-sm text-gray-100 bg-blue-600 hover:bg-blue-400 rounded-md" 
+              className="px-4 py-2 text-sm text-gray-100 bg-blue-600 hover:bg-blue-400 cursor-pointer rounded-md" 
               disabled={!formValid} 
               onClick={(event) => submitForm(event)} 
             />
@@ -134,7 +153,7 @@ export default function Home() {
             <input 
               type="button" 
               value="Clear" 
-              className="px-4 py-2 ml-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
+              className="px-4 py-2 ml-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-md" 
               onClick={() => resetForm()} 
             />
           </div>
@@ -151,21 +170,21 @@ export default function Home() {
               <input 
                 type="button" 
                 value="Text results" 
-                className="px-4 py-2 mr-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
+                className="px-4 py-2 mr-2 text-sm text-gray-100 bg-blue-600 hover:bg-blue-400 cursor-pointer rounded-md" 
                 onClick={() => shareResults('sms')} 
               />
 
               <input 
                 type="button" 
                 value="Email results" 
-                className="px-4 py-2 mr-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
+                className="px-4 py-2 mr-2 text-sm text-gray-100 bg-blue-600 hover:bg-blue-400 cursor-pointer rounded-md" 
                 onClick={() => shareResults('email')} 
               />
 
               <input 
                 type="button" 
                 value="Copy results" 
-                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
+                className="px-4 py-2 text-sm text-gray-100 bg-blue-600 hover:bg-blue-400 cursor-pointer rounded-md" 
                 onClick={() => shareResults('copy')} 
               />
             </div>
@@ -174,7 +193,7 @@ export default function Home() {
               <input 
                 type="button" 
                 value="Back" 
-                className="px-4 py-2 mt-4 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
+                className="px-4 py-2 mt-6 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer rounded-md" 
                 onClick={() => resetForm()} 
               />
             </div>
