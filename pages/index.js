@@ -1,7 +1,7 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import Checklist from "../components/Checklist";
 import { useState, useRef, useEffect } from 'react';
+import { copyToClipboard, sendSms } from "../components/utils";
 
 export default function Home() {
 
@@ -81,43 +81,20 @@ export default function Home() {
     }
   }
 
-  const sendResults = mode => {
-    const smsIos = `sms:&body=${encodeURIComponent(personName)} ${encodeURIComponent(" PASSED their COVID screening today! ✨ View the checklist at http://covidscreen.us")}`;
-    const smsAndroid = `sms:?body=${encodeURIComponent(personName)} ${encodeURIComponent(" PASSED their COVID screening today! ✨ View the checklist at http://covidscreen.us")}`;
-    const email = `mailto:hello@hello.com?subject=${encodeURIComponent("Covid Screen Pass: ")} ${encodeURIComponent(personName)}&body=${encodeURIComponent(personName)} ${encodeURIComponent(" PASSED their COVID screening today!<br><br>View the checklist at http://covidscreen.us")}`;
+  const shareResults = mode => {
+   const email = `mailto:hello@hello.com?subject=${encodeURIComponent("Covid Screen Pass: ")}${encodeURIComponent(personName)}&body=${encodeURIComponent(personName)}${encodeURIComponent(" PASSED their COVID screening today!  View the checklist at http://covidscreen.us")}`;
 
-    if (mode === 'sms' && iOS()) {
-      window.open(smsIos);
-    } else if (mode === 'sms' && !iOS()) {
-      window.open(smsAndroid);
-    } else {
+    if (mode === 'sms') {
+      sendSms(`${encodeURIComponent(personName)}${encodeURIComponent(" PASSED their COVID screening today! ✨ View the checklist at http://covidscreen.us")}`);
+    } else if (mode === 'email') {
       window.open(email);
+    } else if (mode === 'copy') {
+      copyToClipboard(`${personName} PASSED their COVID screening today! ✨ View the checklist at http://covidscreen.us`);
     }
   }
 
-  const iOS = () => {
-    return [
-      'iPad Simulator',
-      'iPhone Simulator',
-      'iPod Simulator',
-      'iPad',
-      'iPhone',
-      'iPod'
-    ].includes(navigator.platform)
-    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-  }
-
-  const copyToClipboard = str => {
-    const el = document.createElement('textarea');
-    el.value = str;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-  };
-
   return (
-    <div className="w-full md:max-w-4xl mx-auto flex flex-wrap items-center justify-between mt-0 py-3">
+    <div className="w-full md:max-w-2xl mx-auto flex flex-wrap mt-0 py-3 px-6">
       <Head>
         <title>Covidscreen</title>
         <link rel="icon" href="/favicon.ico" />
@@ -175,21 +152,21 @@ export default function Home() {
                 type="button" 
                 value="Text results" 
                 className="px-4 py-2 mr-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
-                onClick={() => sendResults('sms')} 
+                onClick={() => shareResults('sms')} 
               />
 
               <input 
                 type="button" 
                 value="Email results" 
                 className="px-4 py-2 mr-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
-                onClick={() => sendResults('email')} 
+                onClick={() => shareResults('email')} 
               />
 
               <input 
                 type="button" 
                 value="Copy results" 
                 className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md" 
-                onClick={() => copyToClipboard(`${personName} PASSED their COVID screening today! ✨ View the checklist at http://covidscreen.us`)} 
+                onClick={() => shareResults('copy')} 
               />
             </div>
 
